@@ -5,3 +5,25 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+require 'rest-client'
+require 'json'
+require 'pry'
+
+Trivium.destroy_all
+
+baseURL = 'https://opentdb.com/api.php?amount=10&category=18'
+data = RestClient.get(baseURL)
+parsed_data = JSON.parse(data)
+
+parsed_data["results"].map do |info|
+    Trivium.create(
+        category: info["category"],
+        question: info["question"],
+        correct_answer: info["correct_answer"],
+        incorrect_answers: info["incorrect_answers"]
+        )
+
+end
+
+
